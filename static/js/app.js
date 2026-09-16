@@ -73,3 +73,11 @@ function showContainer(containerId) {
     });
     document.getElementById(containerId).style.display = 'block';
 }
+
+// Auto hide messages
+document.querySelectorAll('.message').forEach(msg => {
+  setTimeout(() => {
+    msg.classList.add('hide');
+    setTimeout(() => msg.remove(), 500); // remove after fadeUp
+  }, 10000); // 10 seconds
+});

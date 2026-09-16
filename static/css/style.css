@@ -14,6 +14,40 @@ body {
     background-color: white;
 }
 
+.message {
+    color: white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    width: 500px;
+    font-size: 10pt;
+    font-weight: 400;
+    transition: 0.5s;
+    margin-top: 20px;
+    position: fixed;
+    top: 50px;
+    right: 800px;
+    z-index: 1000;
+}
+
+.message.success {
+  background-color: rgb(4, 56, 255);
+}
+
+.message.error {
+  background-color: #dc3545; /* red */
+}
+
+.message.warning {
+  background-color: #ffc107; /* yellow */
+  color: black;
+}
+
+.message.info {
+  background-color: #17a2b8; /* blue */
+}
+
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -262,4 +296,34 @@ body {
 .movie-info p {
     margin: 5px 0 0;
     opacity: 0.7;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.message {
+  animation: fadeDown 0.5s ease forwards;
+}
+
+.message.hide {
+  animation: fadeUp 0.5s ease forwards;
 }
