@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the.room</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/fontawesome-free-6.7.2-web/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="navigation">
+            <div class="left">
+
+                <div class="buttons">
+                    <button title="Exit Room" class="closeBtn"></button>
+                    <button title="Minimize window" class="minimizeBtn"></button>
+                    <button title="Maximize Window" class="maximizeBtn"></button>
+                </div>
+                <span>
+                </span>
+                
+            </div>
+
+            <div class="right">
+                <div class="buttons">
+                    <div class="dropdown">
+                        <button onclick="toggleDropdown()" title="View the available activities" id="dropdownBtn" class="dropdownBtn"><i class="fas fa-bars"></i></button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <button style="border-top-left-radius: 10px !important; border-top-right-radius: 10px !important;" class="watchMovieBtn"><i class="fas fa-film"></i> Watch a Movie</button>
+                            <button class="watchMovieBtn"><i class="fas fa-question-circle"></i>  Movie Suggestions</button>
+                            <button style="border-bottom-left-radius: 10px !important; border-bottom-right-radius: 10px !important;" class="watchMovieBtn"><i class="fas fa-upload"></i> Upload</button>
+
+                        </div>
+                    </div>
+                    <button title="Send message" class="chatCallBtn"><i class="fas fa-message"></i> Open Chat</button>
+                    <button title="Voice Call" class="phoneCallBtn"><i class="fas fa-phone"></i> Voice Call</button>
+                    <button title="Video Call" class="videoCallBtn"><i class="fas fa-video"></i> Video Call</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="movies" class="section movies-section">
+            <div class="section-header">
+                <div>
+                    <h1><i class="fas fa-film"></i> PICK A MOVIE TO WATCH</h1>
+                    <p><i class="fas fa-quote-left"></i> <span id="homeMessage"></span></p>
+                </div>
+                <div>
+                    <span id="date-time" class="date-time"></span> 
+                    <span id="clock" class="clock"></span>
+                </div>
+            </div>
+
+            <div class="movies-content">
+                <div style="display: none;" class="empty-state">
+                    <p><i class="fas fa-info-circle"></i> There are currently no movies to watch. Click the <i class="fas fa-bars"></i> button to upload a movie.</p>
+                </div>
+
+                <div class="movies-container">
+                        <div class="movie">
+                            <img src="/static/images/pexels-slaytinaaaa-4619733.jpg" alt="">
+                            <div class="movie-info">
+                                <h2>Movie Title</h2>
+                                <p>Movie Description</p>
+                                <p class="duration"><i class="fas fa-clock"></i> 2h 30m</p>
+                                <p>Uploaded By: </p>
+                                <button class="watchBtn"><i class="fas fa-play"></i> Watch</button>
+                            </div>
+                        </div>
+
+                        <div class="movie">
+                            <img src="/static/images/pexels-slaytinaaaa-4619733.jpg" alt="">
+                            <div class="movie-info">
+                                <h2>Movie Title</h2>
+                                <p>Movie Description</p>
+                                <p class="duration"><i class="fas fa-clock"></i> 2h 30m</p>
+                                <p>Uploaded By: </p>
+                                <button class="watchBtn"><i class="fas fa-play"></i> Watch</button>
+                            </div>
+                        </div>
+
+                        <div class="movie">
+                            <img src="/static/images/pexels-slaytinaaaa-4619733.jpg" alt="">
+                            <div class="movie-info">
+                                <h2>Movie Title</h2>
+                                <p>Movie Description</p>
+                                <p class="duration"><i class="fas fa-clock"></i> 2h 30m</p>
+                                <p>Uploaded By: </p>
+                                <button class="watchBtn"><i class="fas fa-play"></i> Watch</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    background-color: white;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: black;
+    padding: 15px 30px;
+    border-bottom: 1px solid rgb(219, 219, 219);
+}
+
+.section-header h1 {
+    font-weight: 400;
+    font-size: 20pt;
+    color: rgb(97, 97, 97);
+}
+
+.section-header p {
+    color: black;
+}
+
+.main-container {
+    width: 1200px;
+    height: 700px;
+    margin: 15px 20px;
+    box-shadow: 0 2px 8px rgb(0, 0, 0, 0.5);
+    border-radius: 10px;
+    background-color: white;
+}
+
+#homeMessage {
+    opacity: 1;
+    font-size: 10pt;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    margin-top: 5px;
+}
+
+#homeMessage.changing {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.date-time {
+    font-weight: 500;
+    font-size: 10pt;
+    color: rgb(97, 97, 97);
+}
+
+.clock {
+    font-weight: 500;
+    font-size: 10pt;
+    color: rgb(97, 97, 97);
+}
+
+.navigation {
+    padding: 15px 30px;
+    border-bottom: 1px solid rgb(219, 219, 219);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+}
+
+.window-title {
+    font-weight: 500;
+    font-size: 11pt;
+}
+
+.left .buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.right .buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.right .buttons button {
+    border: none;
+    background: none;
+    font-size: 9pt;
+    color: rgb(4, 56, 255);
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.right .buttons button:hover {
+    background-color: rgb(4, 56, 255);
+    color: white;
+}
+
+.right .buttons button:active {
+    background-color: rgb(4, 56, 255);
+    color: white;
+}
+
+.left .buttons button {
+    border: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.closeBtn {
+    background-color: #FF5F57;
+}
+
+.minimizeBtn {
+    background-color: #FEBC2E;
+}
+
+.maximizeBtn {
+    background-color: #28C840;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    min-width: 160px;
+    background-color: white;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    border-radius: 10px !important;
+    transition: opacity 0.2s ease;
+    display: none;
+}
+
+.dropdown-menu button {
+    border: none !important;
+    border-radius: 0 !important;
+    width: 100%;
+    text-align: left;
+    padding: 12px 15px !important;
+}
+
+.dropdown-menu.show {
+    display: block;
+    opacity: 1;
+}
+
+.movies-content {
+    padding: 5px 30px;
+}
+
+
+.empty-state {
+    margin-top: 10px;
+}
+
+.empty-state p {
+    font-size: 12pt;
+    color: black;
+}
+.movies-container {
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+    margin-top: 20px;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+}
+
+.movies-container::-webkit-scrollbar {
+    height: 5px;
+}
+
+.movies-container::-webkit-scrollbar-thumb {
+    background-color: rgb(4, 56, 255);
+    border-radius: 20px;
+}
+
+.movies-container::-webkit-scrollbar-track {
+    background-color: rgb(243, 242, 242);
+    border-radius: 20px;
+}
+
+.movie {
+    position: relative;
+    min-width: 400px;
+    height: 500px;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.watchBtn {
+    background: rgb(4, 56, 255);
+    color: white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    font-size: 10pt;
+    font-weight: 400;
+    transition: 0.5s;
+    margin-top: 20px;
+
+}
+
+.watchBtn:hover {
+    background-color: rgb(97, 97, 97);
+    color: white;
+}
+
+
+
+.movie img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-info {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 40px 15px 15px;
+    box-sizing: border-box;
+    color: white;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+}
+
+.movie-info h2 {
+    margin: 0;
+}
+
+.movie-info p {
+    margin: 5px 0 0;
+    opacity: 0.7;
+}
