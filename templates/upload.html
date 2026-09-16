@@ -62,32 +62,39 @@
             <div class="movies-content">
                 <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
 
-                    <div>
-                        <label for="title">Movie Title</label>
-                        <input type="text" id="title" name="title" placeholder="Enter the title of the movie" required>
-                    </div>
+                    <div class="left-col">
+                        <div>
+                            <label for="title">Movie Title</label>
+                            <input type="text" id="title" name="title" placeholder="Enter the title of the movie" required>
+                        </div>
 
-                    <div>
-                        <label for="description">Movie Description</label>
-                        <textarea id="description" name="description" placeholder="Enter the description of the movie" required></textarea>
-                    </div>
+                        <div>
+                            <label for="description">Movie Description</label>
+                            <textarea rows="10" id="description" name="description" placeholder="Enter the description of the movie" required></textarea>
+                        </div>
 
-                    <div>
-                        <label for="duration">Movie Duration</label>
-                        <input type="text" id="duration" name="duration" placeholder="2h 30m" required>
-                    </div>
+                        <div>
+                            <label for="duration">Movie Duration</label>
+                            <input type="text" id="duration" name="duration" placeholder="2h 30m" required>
+                        </div>
 
-                    <div>
-                        <label for="thumbnail">Movie Thumbnail</label>
-                        <input type="file" id="thumbnail" name="thumbnail" accept="image/*">
                     </div>
+                    <div class="right-col">
+                        <div>
+                            <label for="thumbnail">Movie Thumbnail</label>
+                            <input type="file" id="thumbnail" name="thumbnail" accept="image/*">
+                        </div>
 
-                    <div>
-                        <label for="video">Movie File</label>
-                        <input type="file" id="movie_file" name="movie_file" accept="video/*">
+                        <div>
+                            <label for="video">Movie File</label>
+                            <input type="file" id="movie_file" name="movie_file" accept="video/*">
+                        </div>
+
+                        <div class="buttons">
+                            <button type="submit" class="uploadBtn"><i class="fas fa-upload"></i> Upload</button>
+                            <button type="button" onclick="window.location.href='{{ url_for('index') }}'" class="cancelBtn"><i class="fas fa-ban"></i> Cancel</button>
+                        </div>
                     </div>
-
-                    <button type="submit" class="uploadBtn"><i class="fas fa-upload"></i> Upload</button>
                 </form>
             </div>
         </div>
