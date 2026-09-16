@@ -1,10 +1,13 @@
-from flask import Flask, render_template, send_from_directory, request, url_for, redirect
+from flask import Flask, render_template, send_from_directory, request, url_for, redirect, flash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
 from werkzeug.utils import secure_filename
 import uuid
+
+ALLOWED_MOVIE_EXTENSIONS = {'mp4', 'webm', 'mkv', 'mov'}
+ALLOWED_THUMBNAIL_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp', 'gif'}
 
 load_dotenv()
 
@@ -41,6 +44,9 @@ class Movie(db.Model):
     def __repr__(self):
         return '<Movie %r>' % self.title
 
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
 # Define the routes
 # Home
 @app.route('/')
@@ -67,13 +73,22 @@ def upload():
         thumbnail = request.files['thumbnail']
 
         if not thumbnail or thumbnail.filename == '':
-            return 'Thumbnail is required'
+            flash('No thumbnail file selected', 'error')
+            return redirect(url_for('upload'))
+
+        if not allowed_file(thumbnail.filename, ALLOWED_THUMBNAIL_EXTENSIONS):
+            flash('Invalid thumbnail file type', 'error')
+            return redirect(url_for('upload'))
 
         thumbnail_extension = os.path.splitext(secure_filename(thumbnail.filename))[1]
         thumbnail_filename = f'{uuid.uuid4().hex}{thumbnail_extension}'
         thumbnail.save(os.path.join(app.config['THUMBNAIL_UPLOAD_FOLDER'], thumbnail_filename))
 
         if movie_file and movie_file.filename:
+            if not allowed_file(movie_file.filename, ALLOWED_MOVIE_EXTENSIONS):
+                flash('Invalid movie file type', 'error')
+                return redirect(url_for('upload'))
+            
             movie_extension = os.path.splitext(secure_filename(movie_file.filename))[1]
             movie_filename = f'{uuid.uuid4().hex}{movie_extension}'
             movie_file.save(os.path.join(app.config['MOVIE_UPLOAD_FOLDER'], movie_filename))
@@ -90,6 +105,7 @@ def upload():
         db.session.add(movie)
         db.session.commit()
 
+        flash('Movie uploaded successfully', 'success')
         return redirect(url_for('index'))
     return render_template('upload.html')
 
