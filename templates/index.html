@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>the.room</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/fontawesome-free-6.7.2-web/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.7.2-web/css/all.min.css') }}">
 </head>
 <body>
     <div class="main-container">
@@ -58,38 +58,23 @@
                 </div>
 
                 <div class="movies-container">
+                    { % for movie in movies %}
                         <div class="movie">
-                            <img src="/static/images/pexels-slaytinaaaa-4619733.jpg" alt="">
+                            {% if movie.thumbnail %}
+                                <img src="{{ url_for('static', filename=movie.thumbnail) }}" alt="">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='images/pexels-slaytinaaaa-4619733.jpg') }}" alt="">
+                            {% endif %}
                             <div class="movie-info">
-                                <h2>Movie Title</h2>
-                                <p>Movie Description</p>
-                                <p class="duration"><i class="fas fa-clock"></i> 2h 30m</p>
-                                <p>Uploaded By: </p>
+                                <h2>{{ movie.title }}</h2>
+                                <p>{{ movie.description }}</p>
+                                <p class="duration"><i class="fas fa-clock"></i> {{ movie.duration }}</p>
+                                <p>Uploaded By: {{ movie.uploaded_by }}</p>
                                 <button class="watchBtn"><i class="fas fa-play"></i> Watch</button>
+                                <button class="watchBtn view-trailer"><i class="fas fa-play"></i> Watch Trailer</button>
                             </div>
                         </div>
-
-                        <div class="movie">
-                            <img src="/static/images/pexels-slaytinaaaa-4619733.jpg" alt="">
-                            <div class="movie-info">
-                                <h2>Movie Title</h2>
-                                <p>Movie Description</p>
-                                <p class="duration"><i class="fas fa-clock"></i> 2h 30m</p>
-                                <p>Uploaded By: </p>
-                                <button class="watchBtn"><i class="fas fa-play"></i> Watch</button>
-                            </div>
-                        </div>
-
-                        <div class="movie">
-                            <img src="/static/images/pexels-slaytinaaaa-4619733.jpg" alt="">
-                            <div class="movie-info">
-                                <h2>Movie Title</h2>
-                                <p>Movie Description</p>
-                                <p class="duration"><i class="fas fa-clock"></i> 2h 30m</p>
-                                <p>Uploaded By: </p>
-                                <button class="watchBtn"><i class="fas fa-play"></i> Watch</button>
-                            </div>
-                        </div>
+                    { % endfor % }
 
                     </div>
 
@@ -101,6 +86,6 @@
 
     </div>
 
-    <script src="/static/js/app.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
