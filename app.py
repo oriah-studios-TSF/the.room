@@ -109,8 +109,10 @@ def upload():
         return redirect(url_for('index'))
     return render_template('upload.html')
 
-
-
+@app.route('/watch/<int:movie_id>')
+def watch_movie(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+    return render_template('watch.html', movie=movie)
 
 
 # Run the app

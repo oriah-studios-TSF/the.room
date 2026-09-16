@@ -74,7 +74,7 @@
                                 <p>{{ movie.description }}</p>
                                 <p class="duration"><i class="fas fa-clock"></i> {{ movie.duration }}</p>
                                 <p>Uploaded By: {{ movie.uploaded_by }}</p>
-                                <button class="watchBtn"><i class="fas fa-play"></i> Watch</button>
+                                <button onclick="window.location.href='{{ url_for('watch_movie', movie_id=movie.id) }}'" class="watchBtn"><i class="fas fa-play"></i> Watch</button>
                                 <button class="watchBtn view-trailer"><i class="fas fa-play"></i> Watch Trailer</button>
                             </div>
                         </div>

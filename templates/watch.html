@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the.room - {{ movie.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.7.2-web/css/all.min.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">{% if category == 'success' %}<i class="fas fa-check-circle"></i> {{ message }}{% elif category == 'error' %}<i class="fas fa-exclamation-triangle"></i> {{ message }}{% elif category == 'info' %}<i class="fas fa-info-circle"></i>{{ message }}{% endif %}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <div class="navigation">
+            <div class="left">
+
+                <div class="buttons">
+                    <button title="Exit Room" class="closeBtn"></button>
+                    <button title="Minimize window" class="minimizeBtn"></button>
+                    <button title="Maximize Window" class="maximizeBtn"></button>
+                </div>
+                <span>
+                </span>
+                
+            </div>
+
+            <div class="right">
+                <div class="buttons">
+                    <button onclick="window.location.href='{{ url_for('index') }}'" title="Send message" class="chatCallBtn"><i class="fas fa-arrow-left"></i> Back to Movie Library</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="movies" class="section movies-section">
+            <div class="section-header">
+                <div>
+                    <h1><i class="fas fa-film"></i> {{ movie.title }}</h1>
+                    
+                </div>
+                <div>
+                    <span id="date-time" class="date-time"></span> 
+                    <span id="clock" class="clock"></span>
+                </div>
+            </div>
+
+            <div class="movies-content">
+                <video controls>
+                    <source src="{{ url_for('movie_file', filename=movie.filename) }}" type="video/mp4">
+                    Your browser does not support video playback.
+                </video>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
