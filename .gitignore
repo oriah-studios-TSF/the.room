@@ -2,3 +2,7 @@
 __pycache__/
 .env
 *.pyc
+instance/
+fontawesome-free-6.7.2-web/
+media/thumbnails/
+media/movies/

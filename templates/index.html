@@ -58,13 +58,9 @@
                 </div>
 
                 <div class="movies-container">
-                    { % for movie in movies %}
+                    {% for movie in movies %}
                         <div class="movie">
-                            {% if movie.thumbnail %}
-                                <img src="{{ url_for('static', filename=movie.thumbnail) }}" alt="">
-                            {% else %}
-                                <img src="{{ url_for('static', filename='images/pexels-slaytinaaaa-4619733.jpg') }}" alt="">
-                            {% endif %}
+                            <img src="{{ url_for('thumbnail_file', filename='the.room-backdrop-white.png') }}" alt="{{ movie.title }}">                                
                             <div class="movie-info">
                                 <h2>{{ movie.title }}</h2>
                                 <p>{{ movie.description }}</p>
@@ -74,7 +70,7 @@
                                 <button class="watchBtn view-trailer"><i class="fas fa-play"></i> Watch Trailer</button>
                             </div>
                         </div>
-                    { % endfor % }
+                    {% endfor %}
 
                     </div>
 
