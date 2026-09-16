@@ -196,7 +196,7 @@ body {
 }
 
 .movies-container::-webkit-scrollbar {
-    height: 5px;
+    height: 8px;
 }
 
 .movies-container::-webkit-scrollbar-thumb {
