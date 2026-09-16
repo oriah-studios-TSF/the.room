@@ -64,3 +64,12 @@ function changeMessage() {
 changeMessage();
 
 setInterval(changeMessage, 1800000);
+
+// On click show different containers 
+function showContainer(containerId) {
+    const containers = document.querySelectorAll('.container');
+    containers.forEach(container => {
+        container.style.display = 'none';
+    });
+    document.getElementById(containerId).style.display = 'block';
+}

@@ -54,6 +54,9 @@ def thumbnail_file(filename):
 def movie_file(filename):
     return send_from_directory(app.config['MOVIE_UPLOAD_FOLDER'], filename)
 
+@app.route('/upload', methods=['POST', 'GET'])
+def upload():
+    return render_template('upload.html')
 
 
 
