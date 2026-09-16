@@ -1,8 +1,10 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, request, url_for, redirect
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 import os
+from werkzeug.utils import secure_filename
+import uuid
 
 load_dotenv()
 
@@ -56,6 +58,39 @@ def movie_file(filename):
 
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
+
+    if request.method == 'POST':
+        title = request.form['title']
+        desciption = request.form['description']
+        duration = request.form['duration']
+        movie_file = request.files['movie_file']
+        thumbnail = request.files['thumbnail']
+
+        if not thumbnail or thumbnail.filename == '':
+            return 'Thumbnail is required'
+
+        thumbnail_extension = os.path.splitext(secure_filename(thumbnail.filename))[1]
+        thumbnail_filename = f'{uuid.uuid4().hex}{thumbnail_extension}'
+        thumbnail.save(os.path.join(app.config['THUMBNAIL_UPLOAD_FOLDER'], thumbnail_filename))
+
+        if movie_file and movie_file.filename:
+            movie_extension = os.path.splitext(secure_filename(movie_file.filename))[1]
+            movie_filename = f'{uuid.uuid4().hex}{movie_extension}'
+            movie_file.save(os.path.join(app.config['MOVIE_UPLOAD_FOLDER'], movie_filename))
+
+        movie = Movie(
+            title=title,
+            thumbnail=thumbnail_filename,
+            description=desciption,
+            duration=duration,
+            filename=movie_filename if movie_file and movie_file.filename else '',
+            uploaded_by="Oriah"
+        )
+
+        db.session.add(movie)
+        db.session.commit()
+
+        return redirect(url_for('index'))
     return render_template('upload.html')
 
 

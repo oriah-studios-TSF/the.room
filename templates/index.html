@@ -57,7 +57,11 @@
                     {% if movies %}
                     {% for movie in movies %}
                         <div class="movie">
-                            <img src="{{ url_for('thumbnail_file', filename='the.room-backdrop-white.png') }}" alt="{{ movie.title }}">                                
+                            {% if movie.thumbnail %}
+                                <img src="{{ url_for('thumbnail_file', filename=movie.thumbnail) }}" alt="{{ movie.title }}">   
+                            {% else %}
+                                <img src="{{ url_for('thumbnail_file', filename='the.room-backdrop-black.png') }}" alt="No Thumbnail">   
+                            {% endif %}                          
                             <div class="movie-info">
                                 <h2>{{ movie.title }}</h2>
                                 <p>{{ movie.description }}</p>
