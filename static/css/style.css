@@ -34,8 +34,33 @@ body {
 form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
+    gap: 10px;
+    padding: 20px 0;
+}
+
+.suggestions h2 {
+    font-size: 12pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: rgb(97, 97, 97);
+}
+
+
+.suggestions p {
+    font-weight: 600;
+    color: rgb(97, 97, 97);
+}
+
+.movie-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10pt;
+}
+
+.movie-suggestion .fas {
+    font-size: 5px;
 }
 
 form div {
@@ -73,7 +98,7 @@ form input[type="file"] {
 
 .uploadBtn {
     background-color: rgb(4, 56, 255);
-    padding: 20px;
+    padding: 15px;
     border-radius: 5px;
     border: none;
     color: white;
@@ -83,7 +108,7 @@ form input[type="file"] {
 
 .cancelBtn {
     background: none;
-    padding: 20px;
+    padding: 15px;
     border-radius: 5px;
     border: 1px solid rgb(4, 56, 255);
     color: rgb(4, 56, 255);
@@ -421,4 +446,100 @@ video {
 
 .message.hide {
   animation: fadeUp 0.5s ease forwards;
+}
+
+.chat-panel {
+    display: none;
+}
+
+
+.chat-panel.active {
+    display: flex;
+}
+
+.chat-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 500px;
+    height: 600px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    flex-direction: column;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    border-bottom: 1px solid rgb(219, 219, 219);
+    background-color: rgb(4, 56, 255);
+    color: white;
+}
+
+.chat-header h2 {
+    font-weight: 400;
+    font-size: 20pt;
+}
+
+.chat-header button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+    font-size: 20pt;
+    color: white;
+    transition: 0.5s;
+}
+
+.chat-header button:hover {
+    transform: translateY(-5px);
+}
+
+.chat-content {
+    flex: 1;
+    padding: 15px 30px;
+    height: 500px;
+}
+
+.chat-input {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.chat-input input {
+    border: 1px solid rgb(219, 219, 219);
+    border-radius: 5px;
+    padding: 15px 20px;
+    font-size: 10pt;
+    color: black;
+    width: 100%;
+}
+
+.chat-input button {
+    background-color: rgb(4, 56, 255);
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.chat-input button:hover {
+    transform: scale(1.05);
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 425px;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
 }

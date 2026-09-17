@@ -36,13 +36,22 @@ class Movie(db.Model):
     title = db.Column(db.String(100), nullable=False)
     thumbnail = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    duration = db.Column(db.String(100), nullable=True)
+    duration = db.Column(db.String(100), nullable=False)
     filename = db.Column(db.String(100), nullable=False)
     uploaded_by = db.Column(db.String(100), nullable=False)
+    trailer = db.Column(db.String(100), nullable=True)
     uploaded_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
 
     def __repr__(self):
         return '<Movie %r>' % self.title
+
+class Suggestions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    suggestion = db.Column(db.String(100), nullable=False)
+    uploaded_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
+
+    def __repr__(self):
+        return '<Suggestion %r>' % self.suggestion
 
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
@@ -70,6 +79,7 @@ def upload():
         desciption = request.form['description']
         duration = request.form['duration']
         movie_file = request.files['movie_file']
+        trailer = request.form['trailer']
         thumbnail = request.files['thumbnail']
 
         if not thumbnail or thumbnail.filename == '':
@@ -98,6 +108,7 @@ def upload():
             thumbnail=thumbnail_filename,
             description=desciption,
             duration=duration,
+            trailer=trailer if trailer else '',
             filename=movie_filename if movie_file and movie_file.filename else '',
             uploaded_by="Oriah"
         )
@@ -113,6 +124,39 @@ def upload():
 def watch_movie(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     return render_template('watch.html', movie=movie)
+
+@app.route('/remove/<int:movie_id>')
+def remove_from_watchlist(movie_id):
+    movie = Movie.query.get_or_404(movie_id)
+
+    # Delete files associated with the movie as well.
+    if movie.filename:
+        os.remove(os.path.join(app.config['MOVIE_UPLOAD_FOLDER'], movie.filename))
+    if movie.thumbnail:
+        os.remove(os.path.join(app.config['THUMBNAIL_UPLOAD_FOLDER'], movie.thumbnail))
+
+    db.session.delete(movie)
+    db.session.commit()
+
+    flash('Movie removed from watchlist', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/suggestion', methods=['POST', 'GET'])
+def suggestion():
+    suggestions = Suggestions.query.order_by(Suggestions.uploaded_at.desc()).all()
+
+    if request.method == 'POST':
+
+        suggestion = request.form['suggestion']
+
+        new_suggestion = Suggestions(suggestion=suggestion)
+
+        db.session.add(new_suggestion)
+        db.session.commit()
+
+        flash('Suggestion submitted successfully', 'success')
+        return redirect(url_for('suggestion'))
+    return render_template('suggestions.html', suggestions=suggestions)
 
 
 # Run the app

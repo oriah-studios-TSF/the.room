@@ -81,3 +81,53 @@ document.querySelectorAll('.message').forEach(msg => {
     setTimeout(() => msg.remove(), 500); // remove after fadeUp
   }, 10000); // 10 seconds
 });
+
+window.addEventListener('load', function() {
+    const loader = document.getElementById('page-loader');
+
+    if (loader) {
+        loader.style.display = 'none';
+    }
+})
+
+const openChatBtn = document.getElementById('openChatBtn');
+const chatPanel = document.getElementById('chatPanel');
+const closeChatBtn = document.getElementById('closeChatBtn');
+
+if (openChatBtn && chatPanel && closeChatBtn) {
+    openChatBtn.addEventListener('click', function() {
+        chatPanel.classList.add('active');
+    });
+
+    closeChatBtn.addEventListener('click', function() {
+        chatPanel.classList.remove('active');
+    });
+}
+
+const chatInput = document.getElementById('chatInput');
+const sendChatBtn = document.getElementById('sendChatBtn');
+const chatMessages = document.getElementById('chatMessages');
+
+if (chatInput && sendChatBtn && chatMessages) {
+    sendChatBtn.addEventListener('click', function() {
+        const message = chatInput.value.trim();
+
+        if (!message) {
+            return;
+        }
+
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('chat-message');
+        messageElement.textContent = `<p>${message}</p>`;
+        chatMessages.appendChild(messageElement);
+
+        chatInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    chatInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            sendChatBtn.click();
+        }
+    });
+}
