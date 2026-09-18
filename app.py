@@ -1,3 +1,5 @@
+# Flask utilities used for creating the application, rendering pages, serving
+# uploaded files, reading form data, and redirecting users after an action.
 from flask import Flask, render_template, send_from_directory, request, url_for, redirect, flash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -7,34 +9,37 @@ import os
 from werkzeug.utils import secure_filename
 import uuid
 
+# Only files with these extensions are accepted during uploads. Sets make the
+# extension check quick and prevent unsupported files from being saved.
 ALLOWED_MOVIE_EXTENSIONS = {'mp4', 'webm', 'mkv', 'mov'}
 ALLOWED_THUMBNAIL_EXTENSIONS = {'jpg', 'jpeg', 'png', 'webp', 'gif'}
 
+# Load values such as SECRET_KEY and SQLALCHEMY_DATABASE_URI from .env.
 load_dotenv()
 
-# Initialize the app
+# Create the Flask application instance.
 app = Flask(__name__)
 
-# Configure the app
+# Configure security and database settings. These values should normally be
+# kept in environment variables rather than written directly in this file.
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Set the thumbnail upload folder
+# Store movies and thumbnails in separate folders inside the application.
 app.config["MOVIE_UPLOAD_FOLDER"] = os.path.join(app.root_path, "media", "movies")
 app.config["THUMBNAIL_UPLOAD_FOLDER"] = os.path.join(app.root_path, "media", "thumbnails")
 
-# Initialize the database
+# Connect SQLAlchemy to this Flask application.
 db = SQLAlchemy(app)
 
-# Initialize the migrations
+# Enable database schema migrations through Flask-Migrate.
 migrate = Migrate(app, db)
 
-# Initialize the socketio
+# Enable real-time communication for chat and movie playback controls.
 socketio = SocketIO(app)
 
-# Define the models
-# Movie
+# Database model representing an uploaded movie.
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -60,8 +65,12 @@ class Suggestions(db.Model):
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
-# Define the routes
-# Home
+# Return True when a filename has an allowed extension.
+def allowed_file(filename, allowed_extensions):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+
+# Home page: retrieve movies newest first and pass them to the template.
 @app.route('/')
 def index():
     movies = Movie.query.order_by(Movie.uploaded_at.desc()).all()
@@ -75,17 +84,20 @@ def thumbnail_file(filename):
 def movie_file(filename):
     return send_from_directory(app.config['MOVIE_UPLOAD_FOLDER'], filename)
 
+
+# Upload page and upload processing.
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
-
     if request.method == 'POST':
+        # Read the submitted form fields and uploaded files.
         title = request.form['title']
-        desciption = request.form['description']
+        description = request.form['description']
         duration = request.form['duration']
         movie_file = request.files['movie_file']
         trailer = request.form['trailer']
         thumbnail = request.files['thumbnail']
 
+        # A thumbnail is required for every movie.
         if not thumbnail or thumbnail.filename == '':
             flash('No thumbnail file selected', 'error')
             return redirect(url_for('upload'))
@@ -94,10 +106,14 @@ def upload():
             flash('Invalid thumbnail file type', 'error')
             return redirect(url_for('upload'))
 
+        # Generate a unique name so files with identical original names do not
+        # overwrite one another. secure_filename removes unsafe characters.
         thumbnail_extension = os.path.splitext(secure_filename(thumbnail.filename))[1]
         thumbnail_filename = f'{uuid.uuid4().hex}{thumbnail_extension}'
         thumbnail.save(os.path.join(app.config['THUMBNAIL_UPLOAD_FOLDER'], thumbnail_filename))
 
+        # The movie file is optional, but if supplied it must use an accepted
+        # video extension before it is saved.
         if movie_file and movie_file.filename:
             if not allowed_file(movie_file.filename, ALLOWED_MOVIE_EXTENSIONS):
                 flash('Invalid movie file type', 'error')
@@ -107,10 +123,11 @@ def upload():
             movie_filename = f'{uuid.uuid4().hex}{movie_extension}'
             movie_file.save(os.path.join(app.config['MOVIE_UPLOAD_FOLDER'], movie_filename))
 
+        # Create a database record pointing to the generated upload names.
         movie = Movie(
             title=title,
             thumbnail=thumbnail_filename,
-            description=desciption,
+            description=description,
             duration=duration,
             trailer=trailer if trailer else '',
             filename=movie_filename if movie_file and movie_file.filename else '',
@@ -180,22 +197,23 @@ def handle_movie_pause(data):
 def handle_movie_seek(data):
     socketio.emit('movie_seek', data, include_self=False)
 
-@socketio.on('voice_call')
-def handle_voice_call():
-    socketio.emit('voice_call', include_self=False)
+# ###
+# @socketio.on('voice_call')
+# def handle_voice_call():
+#     socketio.emit('voice_call', include_self=False)
+#
+# @socketio.on('voice_offer')
+# def handle_voice_offer(data):
+#     socketio.emit('voice_offer', data, include_self=False)
+#
+# @socketio.on('voice_answer')
+# def handle_voice_answer(data):
+#     socketio.emit('voice_answer', data, include_self=False)
+#
+# @socketio.on('voice_ice_candidate')
+# def handle_voice_ice_candidate(data):
+#     socketio.emit('voice_ice_candidate', data, include_self=False)
 
-@socketio.on('voice_offer')
-def handle_voice_offer(data):
-    socketio.emit('voice_offer', data, include_self=False)
-
-@socketio.on('voice_answer')
-def handle_voice_answer(data):
-    socketio.emit('voice_answer', data, include_self=False)
-
-@socketio.on('voice_ice_candidate')
-def handle_voice_ice_candidate(data):
-    socketio.emit('voice_ice_candidate', data, include_self=False)
-
-# Run the app
+# Start the development server when this file is run directly.
 if __name__ == '__main__':
     socketio.run(app, debug=True)
