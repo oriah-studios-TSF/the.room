@@ -1,21 +1,21 @@
-// Toggle between showing and hiding the dropdown content
+// Toggle between showing and hiding the dropdown content.
 function toggleDropdown() {
     document.getElementById('dropdownMenu').classList.toggle('show');     
 }
 
-// Live Current date and time
+// Display the current date when the page loads.
 const date = new Date();
 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 document.getElementById('date-time').innerHTML = date.toLocaleDateString('en-ZA', options);
 
-// Live Clock
+// Update the live clock every second.
 const clock = document.getElementById('clock');
 setInterval(() => {
   const date = new Date();
   clock.innerHTML = date.toLocaleTimeString();
 }, 1000);
 
-// Home messages
+// Messages shown on the home page.
 const messages = [
     "Take your time. There's no rush.",
     "Let's see where today takes us.",
@@ -65,7 +65,7 @@ changeMessage();
 
 setInterval(changeMessage, 1800000);
 
-// On click show different containers 
+// Show the selected page container and hide the others.
 function showContainer(containerId) {
     const containers = document.querySelectorAll('.container');
     containers.forEach(container => {
@@ -74,7 +74,7 @@ function showContainer(containerId) {
     document.getElementById(containerId).style.display = 'block';
 }
 
-// Auto hide messages
+// Automatically hide notification messages after ten seconds.
 document.querySelectorAll('.message').forEach(msg => {
   setTimeout(() => {
     msg.classList.add('hide');
@@ -83,7 +83,7 @@ document.querySelectorAll('.message').forEach(msg => {
 });
 
 
-// Chat Panel
+// Chat panel and real-time messaging.
 const socket = io();
 
 const openChatBtn = document.getElementById('openChatBtn');
@@ -134,7 +134,7 @@ socket.on('receive_message', function(data) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
-// Moive Pause/Play sync
+// Synchronise movie playback between connected clients.
 const moviePlayer = document.getElementById('moviePlayer');
 let isSynced = false;
 let hasInteracted = false;
@@ -214,7 +214,13 @@ if (moviePlayer) {
     });
 }
 
-// Voice Call Panel
+/*
+ * Voice call panel
+ *
+ * Temporarily disabled. Keep this code here for when voice calling is
+ * enabled again.
+ */
+/*
 const voiceCallBtn = document.getElementById('voiceCallBtn');
 const voiceCallPanel = document.getElementById('voiceCallPanel');
 const closeVoiceCallBtn = document.getElementById('closeVoiceCallBtn');
@@ -353,3 +359,4 @@ function createPeerConnection() {
         remoteAudio.srcObject = event.streams[0];
     };
 };
+*/
