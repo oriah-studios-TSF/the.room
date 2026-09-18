@@ -1,10 +1,12 @@
 # Flask utilities used for creating the application, rendering pages, serving
 # uploaded files, reading form data, and redirecting users after an action.
-from flask import Flask, render_template, send_from_directory, request, url_for, redirect, flash
+from flask import Flask, render_template, send_from_directory, request, url_for, redirect, flash, session
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 from flask_migrate import Migrate
+from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from werkzeug.utils import secure_filename
 import uuid
@@ -39,6 +41,16 @@ migrate = Migrate(app, db)
 # Enable real-time communication for chat and movie playback controls.
 socketio = SocketIO(app)
 
+# Enable login functionality.
+login_manager = LoginManager(app)
+
+login_manager.login_view = "access"
+
+# User loader
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 # Database model representing an uploaded movie.
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -62,16 +74,48 @@ class Suggestions(db.Model):
     def __repr__(self):
         return '<Suggestion %r>' % self.suggestion
 
-def allowed_file(filename, allowed_extensions):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    passcode_hash = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return '<User %r>' % self.name
+
+class Message()
 
 # Return True when a filename has an allowed extension.
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
+# Access page
+@app.route('/access', methods=['POST', 'GET'])
+def access():
+    if request.method == 'POST':
+        name = request.form['name']
+        passcode = request.form['passcode']
+        user = User.query.filter_by(name=name).first()
+
+        if user and check_password_hash(user.passcode_hash, passcode):
+            login_user(user)
+            flash('Access granted', 'success')
+            return redirect(url_for('index'))
+    
+        flash('Invalid name or passcode', 'error')
+        return redirect(url_for('access'))
+        
+    return render_template('access.html')
+
+# Logout
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash('Succeccfully logged out', 'success')
+    return redirect(url_for('access'))
 
 # Home page: retrieve movies newest first and pass them to the template.
 @app.route('/')
+@login_required
 def index():
     movies = Movie.query.order_by(Movie.uploaded_at.desc()).all()
     return render_template('index.html', movies=movies)
@@ -87,6 +131,7 @@ def movie_file(filename):
 
 # Upload page and upload processing.
 @app.route('/upload', methods=['POST', 'GET'])
+@login_required
 def upload():
     if request.method == 'POST':
         # Read the submitted form fields and uploaded files.
@@ -142,11 +187,13 @@ def upload():
     return render_template('upload.html')
 
 @app.route('/watch/<int:movie_id>')
+@login_required
 def watch_movie(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     return render_template('watch.html', movie=movie)
 
 @app.route('/remove/<int:movie_id>')
+@login_required
 def remove_from_watchlist(movie_id):
     movie = Movie.query.get_or_404(movie_id)
 
@@ -163,6 +210,7 @@ def remove_from_watchlist(movie_id):
     return redirect(url_for('index'))
 
 @app.route('/suggestion', methods=['POST', 'GET'])
+@login_required
 def suggestion():
     suggestions = Suggestions.query.order_by(Suggestions.uploaded_at.desc()).all()
 

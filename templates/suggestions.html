@@ -20,7 +20,7 @@
         <div class="navigation">
             <div class="left">
                 <div class="buttons">
-                    <button type="button" title="Exit Room" class="closeBtn"></button>
+                    <button type="button" onclick="window.location.href='{{ url_for('logout') }}'" title="Exit Room" class="closeBtn"></button>
                     <button type="button" title="Minimize window" class="minimizeBtn"></button>
                     <button type="button" title="Maximize Window" class="maximizeBtn"></button>
                 </div>
@@ -37,9 +37,11 @@
                             <button type="button" onclick="window.location.href='{{ url_for('upload') }}'" style="border-bottom-left-radius: 10px !important; border-bottom-right-radius: 10px !important;" class="watchMovieBtn"><i class="fas fa-upload"></i> Upload</button>
                         </div>
                     </div>
-                    <button title="Send message" class="chatCallBtn"><i class="fas fa-message"></i> Open Chat</button>
-                    <button title="Voice Call" class="phoneCallBtn"><i class="fas fa-phone"></i> Voice Call</button>
-                    <button title="Video Call" class="videoCallBtn"><i class="fas fa-video"></i> Video Call</button>
+                   <button type="button" title="Open Chat" class="chatBtn" id="openChatBtn"><i class="fas fa-message"></i> Open Chat</button>
+                    <!--
+                    <button type="button" title="Voice Call" id="voiceCallBtn" class="phoneCallBtn"><i class="fas fa-phone"></i> Voice Call</button>
+                    <button type="button" title="Video Call" class="videoCallBtn"><i class="fas fa-video"></i> Video Call</button>
+                    -->
                 </div>
             </div>
         </div>
@@ -48,7 +50,7 @@
             <div class="section-header">
                 <div>
                     <h1><i class="fas fa-question-circle"></i> Movie Suggestions</h1>
-                    
+                    <p><i class="fas fa-quote-left"></i> <span id="homeMessage"></span></p>
                 </div>
                 <div>
                     <span id="date-time" class="date-time"></span> 
@@ -87,7 +89,26 @@
         </div>
     </div>
 
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-header">
+            <div class="buttons">
+                <button title="Close window" id="closeChatBtn" class="closeChatBtn closeBtn"></button>
+                <button title="Minimize window" id="minimizeChatBtn" class="minimizeChatBtn minimizeBtn"></button>
+                <button title="Maximize window" id="maximizeChatBtn" class="maximizeChatBtn maximizeBtn"></button>
+            </div>
+            <span>Chat Panel</span>
+        </div>
 
+        <div" class="chat-content">
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Type your message...">
+                <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

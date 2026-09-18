@@ -20,9 +20,9 @@
             <div class="left">
 
                 <div class="buttons">
-                    <button title="Exit room" class="closeBtn"></button>
-                    <button title="Minimize window" class="minimizeBtn"></button>
-                    <button title="Maximize Window" class="maximizeBtn"></button>
+                    <button type="button" onclick="window.location.href='{{ url_for('logout') }}'" title="Exit room" class="closeBtn"></button>
+                    <button type="button" title="Minimize window" class="minimizeBtn"></button>
+                    <button type="button" title="Maximize Window" class="maximizeBtn"></button>
                 </div>
                 
             </div>
@@ -39,8 +39,10 @@
                         </div>
                     </div>
                     <button type="button" title="Open Chat" class="chatBtn" id="openChatBtn"><i class="fas fa-message"></i> Open Chat</button>
+                    <!--
                     <button type="button" title="Voice Call" id="voiceCallBtn" class="phoneCallBtn"><i class="fas fa-phone"></i> Voice Call</button>
                     <button type="button" title="Video Call" class="videoCallBtn"><i class="fas fa-video"></i> Video Call</button>
+                    -->
                 </div>
             </div>
         </div>
@@ -108,6 +110,7 @@
         </div>
     </div>
 
+    <!--
     <div id="voiceCallPanel" class="voice-call-panel">
         <div class="chat-header">
             <div class="buttons">
@@ -121,6 +124,7 @@
             <div id="voiceCall" class="voice-call"></div>
         </div>
     </div>
+    -->
 
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
