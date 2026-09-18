@@ -1,6 +1,7 @@
 from flask import Flask, render_template, send_from_directory, request, url_for, redirect, flash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO
 from flask_migrate import Migrate
 import os
 from werkzeug.utils import secure_filename
@@ -28,6 +29,9 @@ db = SQLAlchemy(app)
 
 # Initialize the migrations
 migrate = Migrate(app, db)
+
+# Initialize the socketio
+socketio = SocketIO(app)
 
 # Define the models
 # Movie
@@ -158,7 +162,40 @@ def suggestion():
         return redirect(url_for('suggestion'))
     return render_template('suggestions.html', suggestions=suggestions)
 
+@socketio.on('send_message')
+def handle_message(data):
+    socketio.emit('receive_message', data)
+
+
+@socketio.on('movie_play')
+def handle_movie_play(data):
+    socketio.emit('movie_play', data, include_self=False)
+
+
+@socketio.on('movie_pause')
+def handle_movie_pause(data):
+    socketio.emit('movie_pause', data, include_self=False)
+
+@socketio.on('movie_seek')
+def handle_movie_seek(data):
+    socketio.emit('movie_seek', data, include_self=False)
+
+@socketio.on('voice_call')
+def handle_voice_call():
+    socketio.emit('voice_call', include_self=False)
+
+@socketio.on('voice_offer')
+def handle_voice_offer(data):
+    socketio.emit('voice_offer', data, include_self=False)
+
+@socketio.on('voice_answer')
+def handle_voice_answer(data):
+    socketio.emit('voice_answer', data, include_self=False)
+
+@socketio.on('voice_ice_candidate')
+def handle_voice_ice_candidate(data):
+    socketio.emit('voice_ice_candidate', data, include_self=False)
 
 # Run the app
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

@@ -20,7 +20,7 @@
             <div class="left">
 
                 <div class="buttons">
-                    <button title="Exit Room" class="closeBtn"></button>
+                    <button title="Exit room" class="closeBtn"></button>
                     <button title="Minimize window" class="minimizeBtn"></button>
                     <button title="Maximize Window" class="maximizeBtn"></button>
                 </div>
@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <button type="button" title="Open Chat" class="chatBtn" id="openChatBtn"><i class="fas fa-message"></i> Open Chat</button>
-                    <button type="button" title="Voice Call" class="phoneCallBtn"><i class="fas fa-phone"></i> Voice Call</button>
+                    <button type="button" title="Voice Call" id="voiceCallBtn" class="phoneCallBtn"><i class="fas fa-phone"></i> Voice Call</button>
                     <button type="button" title="Video Call" class="videoCallBtn"><i class="fas fa-video"></i> Video Call</button>
                 </div>
             </div>
@@ -91,10 +91,15 @@
 
     <div id="chatPanel" class="chat-panel">
         <div class="chat-header">
-            <h2><i class="fas fa-male"></i> oriah.</h2>
-            <button id="closeChatBtn" class="closeChatBtn"><i class="fas fa-times"></i></button>
+            <div class="buttons">
+                <button title="Close window" id="closeChatBtn" class="closeChatBtn closeBtn"></button>
+                <button title="Minimize window" id="minimizeChatBtn" class="minimizeChatBtn minimizeBtn"></button>
+                <button title="Maximize window" id="maximizeChatBtn" class="maximizeChatBtn maximizeBtn"></button>
+            </div>
+            <span>Chat Panel</span>
         </div>
-        <div class="chat-content">
+
+        <div" class="chat-content">
             <div id="chatMessages" class="chat-messages"></div>
             <div class="chat-input">
                 <input type="text" id="chatInput" placeholder="Type your message...">
@@ -103,6 +108,21 @@
         </div>
     </div>
 
+    <div id="voiceCallPanel" class="voice-call-panel">
+        <div class="chat-header">
+            <div class="buttons">
+                <button title="Close window" id="closeVoiceCallBtn" class="closeVoiceCallBtn closeBtn"></button>
+                <button title="Minimize window" id="minimizeVoiceCallBtn" class="minimizeVoiceCallBtn minimizeBtn"></button>
+                <button title="Maximize window" id="maximizeVoiceCallBtn" class="maximizeVoiceCallBtn maximizeBtn"></button>
+            </div>
+            <span>Voice Call Panel</span>
+        </div>
+        <div class="voice-call-content">
+            <div id="voiceCall" class="voice-call"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

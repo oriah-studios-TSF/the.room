@@ -82,13 +82,9 @@ document.querySelectorAll('.message').forEach(msg => {
   }, 10000); // 10 seconds
 });
 
-window.addEventListener('load', function() {
-    const loader = document.getElementById('page-loader');
 
-    if (loader) {
-        loader.style.display = 'none';
-    }
-})
+// Chat Panel
+const socket = io();
 
 const openChatBtn = document.getElementById('openChatBtn');
 const chatPanel = document.getElementById('chatPanel');
@@ -116,13 +112,11 @@ if (chatInput && sendChatBtn && chatMessages) {
             return;
         }
 
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('chat-message');
-        messageElement.textContent = `<p>${message}</p>`;
-        chatMessages.appendChild(messageElement);
+        socket.emit('send_message', {
+            message: message
+        });
 
         chatInput.value = '';
-        chatMessages.scrollTop = chatMessages.scrollHeight;
     });
 
     chatInput.addEventListener('keydown', function(event) {
@@ -131,3 +125,231 @@ if (chatInput && sendChatBtn && chatMessages) {
         }
     });
 }
+
+socket.on('receive_message', function(data) {
+    const messageElement = document.createElement('p');
+    messageElement.classList.add('chat-message');
+    messageElement.textContent = data.message;
+    chatMessages.appendChild(messageElement);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+// Moive Pause/Play sync
+const moviePlayer = document.getElementById('moviePlayer');
+let isSynced = false;
+let hasInteracted = false;
+let isSeek = false;
+
+if (moviePlayer) {
+    moviePlayer.addEventListener('click', function() {
+       hasInteracted = true;
+    });
+
+    moviePlayer.addEventListener('play', function() {
+       hasInteracted = true;
+
+       if (isSynced) {
+            return;
+        }
+
+
+        socket.emit('movie_play', {
+            currentTime: moviePlayer.currentTime
+        });
+    });
+
+    moviePlayer.addEventListener('pause', function() {
+       hasInteracted = true;
+
+       if (isSynced) {
+            return;
+        }
+
+
+        socket.emit('movie_pause', {
+            currentTime: moviePlayer.currentTime
+        });
+    });
+
+    moviePlayer.addEventListener('seeked', function() {
+        if (isSeek) {
+            isSeek = false;
+            return;
+        }
+
+
+        socket.emit('movie_seek', {
+            currentTime: moviePlayer.currentTime
+        });
+    });
+
+    socket.on('movie_play', function(data) {
+
+        isSynced = true;
+        moviePlayer.currentTime = data.currentTime;
+
+        if (hasInteracted) {
+            moviePlayer.play().catch(function(error) {
+                console.error('Remote play was blocked:', error);
+            });
+        } else {
+            console.log('Waiting for user interaction...');
+        }
+
+        isSynced = false;
+    });
+
+    socket.on('movie_pause', function(data) {
+
+        isSynced = true;
+        moviePlayer.currentTime = data.currentTime;
+        moviePlayer.pause();
+        isSynced = false;
+    });
+
+    socket.on('movie_seek', function(data) {
+
+        isSeek = true;
+        moviePlayer.currentTime = data.currentTime;
+    });
+}
+
+// Voice Call Panel
+const voiceCallBtn = document.getElementById('voiceCallBtn');
+const voiceCallPanel = document.getElementById('voiceCallPanel');
+const closeVoiceCallBtn = document.getElementById('closeVoiceCallBtn');
+const voiceCall = document.getElementById('voiceCall');
+
+let peerConnection = null;
+let localStream = null;
+let isVoiceCaller = null;
+let voiceCallReady = null;
+let pendingIceCandidates = [];
+
+const rtcConfig = {
+    iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' }
+    ]
+};
+
+if (voiceCallBtn && voiceCallPanel && closeVoiceCallBtn) {
+    voiceCallBtn.addEventListener('click', function() {
+        voiceCallPanel.classList.add('active');
+        isVoiceCaller = true;
+        startVoiceCall();
+    });
+
+    closeVoiceCallBtn.addEventListener('click', function() {
+        voiceCallPanel.classList.remove('active');
+    });
+}
+
+async function startVoiceCall() {
+    try {
+        localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        createPeerConnection();
+
+        socket.emit('voice_call');
+
+        if (isVoiceCaller) {
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+
+            socket.emit('voice_offer', {
+                offer: offer
+            });
+        }
+
+    } catch (error) {
+        console.error('Error accessing media devices:', error);
+    }
+
+
+}
+
+socket.on('voice_call', async function() {
+
+    if (!peerConnection) {
+       voiceCallReady = navigator.mediaDevices.getUserMedia({ audio: true });
+
+       localStream = await voiceCallReady;
+
+       createPeerConnection();
+    }
+});
+
+socket.on('voice_offer', async function(data) {
+
+    if (voiceCallReady) {
+        await voiceCallReady;
+    }
+
+    if (!peerConnection) {
+        return;
+    }
+
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+
+    for (const candidate of pendingIceCandidates) {
+        await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    }
+
+    pendingIceCandidates = [];
+
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+
+    socket.emit('voice_answer', {
+        answer: answer
+    });
+});
+
+socket.on('voice_answer', async function(data) {
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+
+});
+
+socket.on('voice_ice_candidate', async function(data) {
+
+    if (!peerConnection) {
+        return;
+    }
+
+    if (!peerConnection.remoteDescription) {
+        pendingIceCandidates.push(data.candidate);
+        return;
+    } 
+
+    await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+});
+
+function createPeerConnection() {
+    peerConnection = new RTCPeerConnection(rtcConfig);
+
+    localStream.getTracks().forEach(function(track) {
+        peerConnection.addTrack(track, localStream);
+    });
+
+    peerConnection.onicecandidate = function(event) {
+       if (event.candidate && event.candidate.sdpMLineIndex !== null && event.candidate.sdpMid !== null) {
+           socket.emit('voice_ice_candidate', {
+               candidate: event.candidate
+           })
+       }
+    };
+
+    peerConnection.ontrack = function(event) {
+
+        let remoteAudio = document.getElementById('remoteAudio');
+        
+        if (!remoteAudio) {
+            remoteAudio = document.createElement('audio');
+            remoteAudio.id = 'remoteAudio';
+            remoteAudio.autoplay = true;
+            voiceCall.appendChild(remoteAudio);
+        }
+
+        remoteAudio.srcObject = event.streams[0];
+    };
+};

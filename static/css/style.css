@@ -145,7 +145,7 @@ form textarea {
 
 video {
     width: 100%;
-    height: 520px;
+    height: 500px;
     object-fit: cover;
     margin-top: 20px;
     border-radius: 10px;
@@ -461,7 +461,7 @@ video {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 500px;
+    width: 480px;
     height: 600px;
     background-color: white;
     border-radius: 15px;
@@ -472,31 +472,44 @@ video {
 
 .chat-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
+    gap: 10px;
+    padding: 20px 15px;
     border-bottom: 1px solid rgb(219, 219, 219);
-    background-color: rgb(4, 56, 255);
-    color: white;
+    background-color: white;
+    color: rgb(4, 56, 255);
 }
 
-.chat-header h2 {
-    font-weight: 400;
-    font-size: 20pt;
+.chat-header span {
+    font-weight: 500;
+    font-size: 12pt;
 }
 
 .chat-header button {
-    background: none;
     border: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
     cursor: pointer;
-    transition: 0.5s;
-    font-size: 20pt;
-    color: white;
-    transition: 0.5s;
 }
 
-.chat-header button:hover {
-    transform: translateY(-5px);
+.chat-header .closeBtn {
+    background-color: #FF5F57;
+}
+
+.chat-header .minimizeBtn {
+    background-color: #FEBC2E;
+}
+
+.chat-header .maximizeBtn {
+    background-color: #28C840;
+}
+
+.chat-message {
+    border-radius: 5px;
+    max-width: 80%;
+    word-break: fit-content;
+    font-size: 10pt;
+    color: grey;
 }
 
 .chat-content {
@@ -538,8 +551,29 @@ video {
 .chat-messages {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     height: 425px;
     overflow-y: scroll;
     scroll-behavior: smooth;
+}
+
+.voice-call-panel {
+    display: none;
+}
+
+.voice-call-panel.active {
+    display: flex;
+}
+
+.voice-call-panel {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 480px;
+    height: 600px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    flex-direction: column;
 }

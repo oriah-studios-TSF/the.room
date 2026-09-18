@@ -39,7 +39,7 @@
             <div class="section-header">
                 <div>
                     <h1><i class="fas fa-film"></i> {{ movie.title }}</h1>
-                    
+                    <p><i class="fas fa-quote-left"></i> <span id="homeMessage"></span></p>
                 </div>
                 <div>
                     <span id="date-time" class="date-time"></span> 
@@ -48,7 +48,7 @@
             </div>
 
             <div class="movies-content">
-                <video controls>
+                <video id="moviePlayer" controls>
                     <source src="{{ url_for('movie_file', filename=movie.filename) }}" type="video/mp4">
                     Your browser does not support video playback.
                 </video>
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
