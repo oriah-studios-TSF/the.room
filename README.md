@@ -23,6 +23,34 @@ The application allows two authenticated users to access a shared movie collecti
 - Local Font Awesome assets
 - Separate frontend, media, and migration structure
 
+## Screenshots
+
+NB! Populated data is meant for demonstration purposes.
+
+### Access
+
+![the.room access page](docs/access.jpeg)
+
+### Empty State Movie Library
+
+![the.room movie library](docs/empty-state-watch.jpeg)
+
+### Populated Movie Library
+
+![the.room movie library](docs/populated-watch.jpeg)
+
+### Watch Experience
+
+![the.room watch page](docs/watch.jpeg)
+
+### Chat
+
+![the.room chat](docs/chat.jpeg)
+
+### Movie Suggestions
+
+![the.room movie suggestions](docs/suggestions.jpeg)
+
 ## Technology Stack
 
 ### Backend

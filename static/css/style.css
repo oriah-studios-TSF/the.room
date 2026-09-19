@@ -554,7 +554,7 @@ video {
     padding: 20px 15px;
     border-bottom: 1px solid rgb(219, 219, 219);
     background-color: white;
-    color: rgb(4, 56, 255);
+    color: #0438ff;
 }
 
 .chat-header span {
