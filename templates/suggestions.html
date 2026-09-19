@@ -20,11 +20,8 @@
         <div class="navigation">
             <div class="left">
                 <div class="buttons">
-                    <button type="button" onclick="window.location.href='{{ url_for('logout') }}'" title="Exit Room" class="closeBtn"></button>
-                    <button type="button" title="Minimize window" class="minimizeBtn"></button>
-                    <button type="button" title="Maximize Window" class="maximizeBtn"></button>
+                    <button type="button" onclick="window.location.href='{{ url_for('logout') }}'" title="Logout from Room" class="closeBtn"><i class="fas fa-sign-out"></i> Logout</button>
                 </div>
-                
             </div>
             
             <div class="right">
@@ -91,12 +88,10 @@
 
     <div id="chatPanel" class="chat-panel">
         <div class="chat-header">
+            <span><i class="fas fa-message"></i> Chat Panel</span>
             <div class="buttons">
-                <button title="Close window" id="closeChatBtn" class="closeChatBtn closeBtn"></button>
-                <button title="Minimize window" id="minimizeChatBtn" class="minimizeChatBtn minimizeBtn"></button>
-                <button title="Maximize window" id="maximizeChatBtn" class="maximizeChatBtn maximizeBtn"></button>
+                <button title="Close window" id="closeChatBtn" class="closeChatBtn closeBtn"><i class="fas fa-times"></i> Hide</button>
             </div>
-            <span>Chat Panel</span>
         </div>
 
         <div" class="chat-content">

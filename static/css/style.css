@@ -346,22 +346,23 @@ video {
 
 .left .buttons button {
     border: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
+    background: none;
+    font-size: 9pt;
+    color: rgb(4, 56, 255);
+    padding: 5px 10px;
+    border-radius: 20px;
     cursor: pointer;
+    transition: 0.5s;
 }
 
-.closeBtn {
-    background-color: #FF5F57;
+.left .buttons button:active {
+    background-color: rgb(4, 56, 255);
+    color: white;
 }
 
-.minimizeBtn {
-    background-color: #FEBC2E;
-}
-
-.maximizeBtn {
-    background-color: #28C840;
+.left .buttons button:hover {
+    background-color: rgb(4, 56, 255);
+    color: white;
 }
 
 .dropdown {
@@ -547,6 +548,8 @@ video {
 
 .chat-header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     gap: 10px;
     padding: 20px 15px;
     border-bottom: 1px solid rgb(219, 219, 219);
@@ -561,30 +564,42 @@ video {
 
 .chat-header button {
     border: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
+    background: none;
+    font-size: 9pt;
+    color: rgb(4, 56, 255);
+    padding: 5px 10px;
+    border-radius: 20px;
     cursor: pointer;
+    transition: 0.5s;
 }
 
-.chat-header .closeBtn {
-    background-color: #FF5F57;
-}
-
-.chat-header .minimizeBtn {
-    background-color: #FEBC2E;
-}
-
-.chat-header .maximizeBtn {
-    background-color: #28C840;
+.chat-header button:hover {
+    background-color: rgb(4, 56, 255);
+    color: white;
 }
 
 .chat-message {
     border-radius: 5px;
-    max-width: 80%;
+    max-width: 90%;
     overflow-wrap: anywhere;
-    font-size: 10pt;
+    font-size: 11pt;
     color: grey;
+}
+
+.oriah-message {
+    color: darkblue;
+}
+
+.muse-message {
+    color: darkred;
+}
+
+.chat-message span {
+    margin-left: 5px;
+}
+
+.chat-message small {
+    float: right;
 }
 
 .chat-content {

@@ -90,6 +90,25 @@ const openChatBtn = document.getElementById('openChatBtn');
 const chatPanel = document.getElementById('chatPanel');
 const closeChatBtn = document.getElementById('closeChatBtn');
 
+function addChatMessage(data) {
+    const messageElement = document.createElement('p');
+    messageElement.classList.add('chat-message');
+    messageElement.classList.add(data.user === 'Oriah' ? 'oriah-message' : 'muse-message');
+
+    const senderElement = document.createElement('strong');
+    senderElement.textContent = data.user === 'Oriah' ? '👨' : '👩';
+
+    const contentElement = document.createElement('span');
+    contentElement.textContent = data.message;
+
+    messageElement.appendChild(senderElement);
+    messageElement.appendChild(contentElement);
+
+
+    chatMessages.appendChild(messageElement);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
 if (openChatBtn && chatPanel && closeChatBtn) {
     openChatBtn.addEventListener('click', function() {
         chatPanel.classList.add('active');
@@ -124,14 +143,18 @@ if (chatInput && sendChatBtn && chatMessages) {
             sendChatBtn.click();
         }
     });
+
+    fetch('/chat/messages')
+        .then(response => response.json())
+        .then (messages => {
+            messages.forEach(function(data) {
+                addChatMessage(data);
+            });
+        });
 }
 
 socket.on('receive_message', function(data) {
-    const messageElement = document.createElement('p');
-    messageElement.classList.add('chat-message');
-    messageElement.textContent = data.message;
-    chatMessages.appendChild(messageElement);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    addChatMessage(data);
 });
 
 // Synchronise movie playback between connected clients.

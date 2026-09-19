@@ -1,6 +1,6 @@
 # Flask utilities used for creating the application, rendering pages, serving
 # uploaded files, reading form data, and redirecting users after an action.
-from flask import Flask, render_template, send_from_directory, request, url_for, redirect, flash, session
+from flask import Flask, render_template, send_from_directory, request, url_for, redirect, flash, jsonify
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
@@ -82,7 +82,16 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.name
 
-class Message()
+class Message(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=db.func.now())
+
+    user = db.relationship('User', backref='messages')
+
+    def __repr__(self):
+        return '<Message %r>' % self.content
 
 # Return True when a filename has an allowed extension.
 def allowed_file(filename, allowed_extensions):
@@ -229,7 +238,32 @@ def suggestion():
 
 @socketio.on('send_message')
 def handle_message(data):
-    socketio.emit('receive_message', data)
+    if not current_user.is_authenticated:
+        return
+
+    message = Message(user_id=current_user.id, content=data['message'])
+    db.session.add(message)
+    db.session.commit()
+
+
+    socketio.emit('receive_message', {
+        'message': message.content,
+        'user': current_user.name,
+        'timestamp': message.timestamp.isoformat()
+    })
+
+@app.route('/chat/messages')
+@login_required
+def chat_meesage():
+    messages = Message.query.order_by(Message.timestamp.asc()).all()
+    
+    return jsonify([
+        {
+            'message': message.content,
+            'user': message.user.name,
+            'timestamp': message.timestamp.isoformat()
+        } for message in messages
+    ])
 
 
 @socketio.on('movie_play')
