@@ -349,26 +349,6 @@ The current scope focuses on:
 
 Voice and video communication experiments were explored during development but are not part of the current active feature set.
 
-## Project Status
-
-**Completed — V1**
-
-The core application functionality is implemented and the project is now moving into documentation, code cleanup, testing, and publication.
-
-## Future Possibilities
-
-Possible future development could include:
-
-- Improved movie metadata
-- More advanced playback synchronization
-- Better chat presentation
-- Additional media management
-- Voice communication
-- Video communication
-- Additional administrative controls
-
-These are not required for the current V1 implementation.
-
 ## Author
 
 **Molefe Ramotsepane**
